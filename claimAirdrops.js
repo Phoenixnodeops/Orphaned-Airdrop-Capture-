@@ -1,34 +1,35 @@
+// claimAirdrops.js
 const { ethers } = require("ethers");
-const fs = require("fs");
+const { INFURA_URL } = require("./src/config");
+const snapshotWallets = require("./src/snapshotWallets.json");
 
-const INFURA_URL = "https://mainnet.infura.io/v3/d097e26906bb4d489da56616c97a8ba0";
-const provider = new ethers.providers.JsonRpcProvider(INFURA_URL);
+const AIRDROP_CONTRACT = "0x27C71F2cE7809Fea949FF8dC65b45706c61f3040"; // Example airdrop contract
 
-const walletData = JSON.parse(fs.readFileSync("snapshotWallets.json", "utf-8"));
-const addresses = walletData.addresses;
-
-const AIRDROP_CONTRACT = "0x0000000000000000000000000000000000000000"; // placeholder
 const AIRDROP_ABI = [
-  "function isEligible(address) view returns (bool)",
-  "function claim()"
+  "function isClaimed(address) view returns (bool)",
+  "function claim(address)"
 ];
 
-async function claimAirdrops() {
+async function claimEligibleAirdrops() {
+  const provider = new ethers.providers.JsonRpcProvider(INFURA_URL);
   const contract = new ethers.Contract(AIRDROP_CONTRACT, AIRDROP_ABI, provider);
 
-  for (const address of addresses) {
+  for (const wallet of snapshotWallets) {
+    const address = wallet.address;
+
     try {
-      const eligible = await contract.isEligible(address);
-      if (eligible) {
-        console.log(`✅ ${address} is eligible - claiming...`);
-        // Sign + send transaction would go here
+      const isClaimed = await contract.isClaimed(address);
+      if (!isClaimed) {
+        console.log(`✅ ${address} is eligible for airdrop (simulation only).`);
+        // You would trigger the actual claim here if you had a signer.
+        // e.g. await contract.connect(signer).claim(address);
       } else {
-        console.log(`❌ ${address} not eligible.`);
+        console.log(`❌ ${address} has already claimed.`);
       }
-    } catch (e) {
-      console.log(`⚠️ Error with ${address}: ${e.message}`);
+    } catch (err) {
+      console.error(`⚠️ Error checking ${address}:`, err.message);
     }
   }
 }
 
-claimAirdrops();
+claimEligibleAirdrops();
