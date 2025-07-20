@@ -1,9 +1,22 @@
-{
-  "wallets": [
-    "0x28C6c06298d514Db089934071355E5743bf21d60",
-    "0xB527a981e1D415AF696936B3174F2d7ac8D30fEd",
-    "0x5a52e96bacdabb82fd05763e25335261b270efcb",
-    "0x3f5CE5FBFe3E9af3971dD833D26BA9b5C936f0bE",
-    "0xCffAd3200574698b78f32232aa9D63eABD290703"
-  ]
-}
+[
+  {
+    "address": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
+    "tag": "Example Whale 1"
+  },
+  {
+    "address": "0x267be1c1d684f78cb4f6a176c4911b741e4ffdc0",
+    "tag": "Example Whale 2"
+  },
+  {
+    "address": "0x6fc82a5fe25a5cdb58bc74600a40a69c065263f8",
+    "tag": "Example Holder 3"
+  },
+  {
+    "address": "0x281055afc982d96fab65b3a49cac8b878184cb16",
+    "tag": "Example Holder 4"
+  },
+  {
+    "address": "0xfe9e8709d3215310075d67e3ed32a380ccf451c8",
+    "tag": "Example Holder 5"
+  }
+]
