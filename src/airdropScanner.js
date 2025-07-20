@@ -1,31 +1,15 @@
-const ethers = require("ethers");
-const axios = require("axios");
-require("dotenv").config();
+// src/airdropScanner.js
+import Web3 from "web3";
+import { config } from "./config.js";
 
-const RPC = process.env.RPC_URL;
-const provider = new ethers.providers.JsonRpcProvider(RPC);
-const wallets = require("../data/snapshotWallets.json");
+const web3 = new Web3(new Web3.providers.HttpProvider(config.providerUrl));
 
-async function checkAirdropEligibility(address) {
-  try {
-    const response = await axios.get(`https://airdrop-api.snapshot.org/check?wallet=${address}`);
-    return response.data;
-  } catch (error) {
-    return { address, eligible: false, error: error.message };
-  }
+// Only initialize account if private key is present
+let account = null;
+if (config.privateKey && config.privateKey.startsWith("0x")) {
+  account = web3.eth.accounts.wallet.add(config.privateKey);
+} else {
+  account = { address: "0xFAKE_ADDRESS_FOR_SIMULATION" }; // simulation fallback
 }
 
-async function scanWallets() {
-  console.log("🔍 Scanning for unclaimed airdrops...");
-  const results = [];
-
-  for (const wallet of wallets) {
-    const result = await checkAirdropEligibility(wallet);
-    results.push(result);
-  }
-
-  console.log("✅ Scan complete:");
-  console.table(results);
-}
-
-scanWallets();
+export const getWalletAddress = () => account.address;
